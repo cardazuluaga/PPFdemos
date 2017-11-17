@@ -1,4 +1,4 @@
-# PPFdemos
+# Probabilistic Power flow demos
 Here, we present demos to analyze probabilistic power flow problems.
 
 This Demo includes several methods for addressing the Probabilistic power flow
@@ -11,5 +11,9 @@ In: Woon W., Aung Z., Kramer O., Madnick S. (eds) Data Analytics for
 Renewable Energy Integration. DARE 2016. Lecture Notes in Computer 
 Science, vol 10097. 
 
-Some codes need the MATPOWER package, which is available at 
-http://www.pserc.cornell.edu/matpower/
+Dependencies
+------------
+
+For the Monte Carlo Simulation:
+
+* MATPOWER
