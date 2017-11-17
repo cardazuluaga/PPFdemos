@@ -31,7 +31,7 @@ Datos.Cargas = [1   3   0       0
                 5   1   0.7     0.7
                 6   1   0.5     0.7];   %
 
-Res = NRCarDaMP(Datos);
+Res = NR_Alg(Datos);
 Vnt = abs(Res.V(:,:));
 TheT = angle(Res.V(:,:));
 PdT = Datos.Cargas(:,3);
@@ -49,7 +49,7 @@ Pdc = Pdc(2:end);
 DatosDC = Datos;
 DatosDC.Lineas(:,3) = zeros(length(DatosDC.Lineas(:,1)),1);
 DatosDC.Lineas(:,5) = zeros(length(DatosDC.Lineas(:,1)),1);
-ResDC = NRCarDaMP(DatosDC);
+ResDC = NR_Alg(DatosDC);
 Ybusdc = ResDC.YBUS(2:end,2:end);
 Bbusdc = -imag(Ybusdc);
 ThetaDCtem = Bbusdc\Pdc;
