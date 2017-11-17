@@ -104,7 +104,6 @@ DatosMCS = Datos;
 Tppfi = cputime;
 for n = 1:Ns
     DatosMCS.Gen(Ng,[1 2 3]) = [Ng  Pg(:,n)  Vg(:,n) ];
-    %               nodo P       Q
     DatosMCS.Cargas(Nd,[1 3 4]) = [Nd Pd(:,n) Qd(:,n)];
     Restemp = NR_Alg(DatosMCS);
     x1(n,:) = abs(Restemp.V(2:end,:))';
@@ -153,7 +152,7 @@ TppfABCi = cputime;
 while j <= Ns
     x(n,2:N) =  unifrnd(linfT,lsupT,(N-1),1)';
     x(n,(N + Ng(end) +1):end) = ones(1,(N-length(Ng)-1)) + sqrt(sig2volprior)*randn(1,(N-length(Ng)-1));
-    [PQ] = EvalPotIny(x(n,:),Res.YBUS,ng);
+    [PQ] = get_PotInj(x(n,:),Res.YBUS,ng);
     Rho(n) = sqrt(mean((b(:,n) - PQ).^2));
     if Rho(n)<=epsilon
         xacep(j,:) = x(n,:);
@@ -235,7 +234,7 @@ while j <= Ns
     xinitemp = mvnrnd(xbefore(j-1,:)',Sigma);
     x(n,2:N) = xinitemp(1:N-1);
     x(n,(N + Ng(end) +1):end) = xinitemp(1,N:end);
-    [PQ] = EvalPotIny(x(n,:),Res.YBUS,ng);
+    [PQ] = get_PotInj(x(n,:),Res.YBUS,ng);
     RhoC(n) = sqrt((1/size(b(:,n),1))*(b(:,n) - PQ)'*(b(:,n) - PQ));%
     if RhoC(n)<=eptrue
         xacep(j,:) = x(n,:);
@@ -323,7 +322,7 @@ while j <= Ns
    xsmc(n,2:N) = xsmc1(n,1:N-1);
    xsmc(n,(N + Ng(end) +1):end) = xsmc1(n,N:end);
    
-   [PQ] = EvalPotIny(xsmc(n,:),Res.YBUS,ng);
+   [PQ] = get_PotInj(xsmc(n,:),Res.YBUS,ng);
    Rho31(n) = sqrt((1/size(b(:,n),1))*(b(:,n) - PQ)'*(b(:,n) - PQ));
    if Rho31(n) <= epT(1)
       xsmcacpe(j,:) = xsmc1(n,:);
@@ -360,7 +359,7 @@ while p <= Ns %
     xsmc(n,2:N) = xsmc2(n,1:N-1);
     xsmc(n,(N + Ng(end) +1):end) = xsmc2(n,N:end);
     
-    [PQ] = EvalPotIny(xsmc(n,:),Res.YBUS,ng);
+    [PQ] = get_PotInj(xsmc(n,:),Res.YBUS,ng);
     sigPQ =  mad(PQ);
     Rho32(n) = sqrt((1/size(b(:,n),1))*(b(:,n) - PQ)'*(b(:,n) - PQ));
    if Rho32(n) <= epT(j)
@@ -449,7 +448,6 @@ Sigma(1:N-1,1:N-1) = sigma2theta*eye(N-1);
 Sigma(N:end,N:end) = sigma2vol*eye(N-length(Ng)-1);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Sbus = CalcularSbus(Datos.Lineas, Datos.Gen, Datos.Cargas);
 pv = find(Datos.Cargas(:,2) == 2);
 pq = find(Datos.Cargas(:,2) == 1);
 npv = length(pv);
@@ -463,7 +461,7 @@ j = 2;
 n = 1;
 m = 1;
 TppfJABCSMCi = cputime;
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%ABC%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%JABC%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 while j <= Ns
    xinitemp = mvnrnd(xbefore(j-1,:)',Sigma);
    xsmc1(n,1:N-1) = xinitemp(1:N-1);    
@@ -472,7 +470,7 @@ while j <= Ns
    xsmc(n,2:N) = xsmc1(n,1:N-1);
    xsmc(n,(N + Ng(end) +1):end) = xsmc1(n,N:end);
    
-   [PQ] = EvalPotIny(xsmc(n,:),Res.YBUS,ng);
+   [PQ] = get_PotInj(xsmc(n,:),Res.YBUS,ng);
    Rho41(n) = sqrt((1/size(b(:,n),1))*(b(:,n) - PQ)'*(b(:,n) - PQ));
    if Rho41(n) <= epT(1)
       xsmcacpe(j,:) = xsmc1(n,:);
@@ -492,7 +490,7 @@ while j <= Ns
    n = n + 1;
    m = m + 1;
 end    
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%ABC%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%JABC%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Wsmc(1,:) = Wsmc(1,:)./sum(Wsmc(1,:));
 p = 1;
 n = 1;
@@ -513,8 +511,7 @@ while p <= Ns
     xsmc(n,2:N) = xsmc2(n,1:N-1);
     xsmc(n,(N + Ng(end) +1):end) = xsmc2(n,N:end);
     
-    [PQ] = EvalPotIny(xsmc(n,:),Res.YBUS,ng);
-    sigPQ =  mad(PQ);
+    [PQ] = get_PotInj(xsmc(n,:),Res.YBUS,ng);
     Rho42(n) = sqrt((1/size(b(:,n),1))*(b(:,n) - PQ)'*(b(:,n) - PQ));
    if Rho42(n) <= epT(j)
       xsmcacpe2(p,:) = xsmc2(n,:);
