@@ -1,5 +1,5 @@
 # PPFdemos
-Here, we present demos to analyze probabilistic power flow problems
+Here, we present demos to analyze probabilistic power flow problems.
 
 These codes include several methods for addressing the Probabilistic power flow
 problem (PPF). We employ the Monte Carlo simulation method and different 
