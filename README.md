@@ -14,6 +14,4 @@ Science, vol 10097.
 Dependencies
 ------------
 
-For the Monte Carlo Simulation:
-
 * MATPOWER
